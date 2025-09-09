@@ -1,6 +1,6 @@
 package br.com.henrique.book_service.controller;
 
-import java.util.HashMap;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+
 
 import br.com.henrique.book_service.dto.Exchange;
 import br.com.henrique.book_service.environment.InstanceInformationService;
 import br.com.henrique.book_service.model.Book;
+import br.com.henrique.book_service.proxy.ExchangeProxy;
 import br.com.henrique.book_service.repository.BookRepository;
 
 @RestController
@@ -24,6 +25,29 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private ExchangeProxy exchangeProxy;
+
+    @GetMapping(value = "/{id}/{currency}",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public Book findBook(@PathVariable("id") Long id,
+                         @PathVariable("currency") String currency){
+        var book = bookRepository.findById(id).orElseThrow();
+
+  
+        Exchange exchange = exchangeProxy.getExchange(
+            book.getPrice(), 
+            "USD", 
+            currency);
+        
+        
+        book.setEnvironment(informationService.retrieveServerPort() + " feign");
+        book.setPrice(exchange.getConvertedValue());
+        book.setCurrency(currency);
+        return book;
+    }
+
+    /* 
     @GetMapping(value = "/{id}/{currency}",
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public Book findBook(@PathVariable("id") Long id,
@@ -47,7 +71,7 @@ public class BookController {
         book.setCurrency(currency);
         return book;
     }
-
+*/
     //     @GetMapping(value = "/{id}/{currency}",
     //             produces = MediaType.APPLICATION_JSON_VALUE)
     // public Book findBook(@PathVariable("id") Long id,
