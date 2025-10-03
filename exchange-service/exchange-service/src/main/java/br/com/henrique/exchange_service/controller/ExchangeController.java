@@ -24,7 +24,7 @@ public class ExchangeController {
     @Autowired
     ExchangeRepository exchangeRepository;
 
-    @GetMapping(value = "{amount}/{from}/{to}", produces = MediaType.APPLICATION_JSON_VALUE)     
+    @GetMapping(value = "{amount}/{from}/{to}", produces = MediaType.APPLICATION_JSON_VALUE)  
     public Exchange getExchange(
         @PathVariable("amount") BigDecimal amount, 
          @PathVariable("from") String from, 

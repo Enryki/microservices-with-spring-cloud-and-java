@@ -40,8 +40,9 @@ public class BookController {
             "USD", 
             currency);
         
-        
-        book.setEnvironment(informationService.retrieveServerPort() + " feign");
+        book.setEnvironment("Book Port: "+ informationService.retrieveServerPort() + 
+                            " Exchange Port: " + exchange.getEnvironment());
+        //book.setEnvironment(informationService.retrieveServerPort() + " feign");
         book.setPrice(exchange.getConvertedValue());
         book.setCurrency(currency);
         return book;

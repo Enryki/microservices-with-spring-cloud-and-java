@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.henrique.book_service.dto.Exchange;
 
-@FeignClient(name = "exchange-service", url = "http://localhost:8000")
+@FeignClient(name = "exchange-service")
     public interface ExchangeProxy {
         @GetMapping(value = "/exchange-service/{amount}/{from}/{to}")     
         public Exchange getExchange(
